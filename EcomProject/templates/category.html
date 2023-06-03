@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+  {% if category %}
+    {{category.description|truncatewords:155}}
+  {% else %}
+    Welcome to DA Foods where you can find the delicious foods and beverages
+  {% endif %}
+{% endblock %}
+{% block title %}
+  {% if category %}
+    {{category.name}} - DA Foods
+  {% else %}
+    Check our new dishes - DA Foods
+  {% endif %}
+{% endblock %}
+{% block content %}
+  {% if category %}
+  <div>
+    <div class="row my_row_class">
+      <div class="mx-auto">
+        <p>
+          <a href="{% url 'shop:allProdCat' %}">Our Food Collections</a>
+        </p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <div class="mx_auto">
+  {% if category %}
+    <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}">
+  </div><br>
+  <div>
+    <h1 class="text-center my_title">{{category.name}}</h1>
+    <p class="text-justify">{{category.description}}</p>
+  </div>
+  {% else %}
+  <div>
+    <img class="my_image my_image_padding" src="{% static 'image/banner.png' %}" alt="Menu" width="100%">
+  </div><br>
+<div>
+  <h1 class="text-center my_title">Our Menu</h1>
+  <p class="text-justify">“There is no love sincerer than the love of food,” George Bernard Shaw said. Judging by the number of amazing dishes out there, he was right.
+    But which are the tastiest? Which are the best foods? And what are the destinations that serve them?
+    We’ve scoured the planet for what we think are 50 of the most delicious foods ever created. For now, feast your eyes and control your drooling, as we reveal some of the world’s best foods that can help inspire your travel plans:</p>
+  </div>
+  {% endif %}
+  <div class="container">
+    <div class="row mx_auto">
+      {% for product in products.object_list %}
+      <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-4">
+        <div class="card text-center" style="min-width: 18rem;">
+          <a href="{{product.get_url}}"><img class="card-img-top my_image" src="{{product.image.url}}"></a>
+          <div class="card-body">
+            <h4>{{product.name}}</h4>
+            <p>Rs.{{product.price}}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="mx-auto">
+      {% if products.paginator.num_pages > 1 %}
+      <hr>
+      <div class="text-center">
+        {% for pg in products.paginator.page_range %}
+        <a href="?page={{pg}}" class="btn btn-light btn-sm {% if product.number == pg %} active {% endif %}">{{pg}}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div><br>
+  </div>
+{% endblock %}
